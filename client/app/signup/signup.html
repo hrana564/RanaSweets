@@ -1,0 +1,52 @@
+<div class="signup center-block jumbotron" style="text-align: left !important;">
+  <h1>Signup</h1>
+  <form role="form" [formGroup]="signupForm" (ngSubmit)="onSubmit(signupForm)" >
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" class="form-control" id="username" placeholder="Username" formControlName="userName">
+  </div><br />
+    <div class="error" *ngIf="signupForm.get('userName').touched && signupForm.get('userName').hasError('required')">
+      User Name is required
+    </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control" id="password" placeholder="Password" formControlName="password">
+  </div><br />
+    <div class="error" *ngIf="signupForm.get('password').touched && signupForm.get('password').hasError('required')">
+      Password is required
+    </div>
+  <div class="form-group">
+    <label for="cnfpassword">Confirm Password</label>
+    <input type="password" class="form-control" id="cnfpassword" placeholder="Confirm Password" formControlName="cnfPassword">
+  </div><br />
+    <div class="error" *ngIf="signupForm.get('cnfPassword').touched && signupForm.get('cnfPassword').hasError('required')">
+      Confirm Password is required
+    </div>
+    <div class="error" *ngIf="signupForm.get('cnfPassword').touched && signupForm.get('cnfPassword').hasError('PasswordMatchValidator')">
+      Passwords do not match.
+    </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input type="email" class="form-control" id="email" placeholder="abc@xyz.com" formControlName="email">
+  </div><br />
+    <div class="error" *ngIf="signupForm.get('email').touched && signupForm.get('email').hasError('required')">
+      Email is required.
+    </div>
+    <div class="error" *ngIf="signupForm.get('email').touched && signupForm.get('email').hasError('ValidateEmail')">
+      Please enter a valid email.
+    </div>
+  <div class="form-group">
+    <label for="age">Age</label>
+    <input type="text" class="form-control" id="age" placeholder="age" formControlName="age">
+  </div><br />
+    <div class="error" *ngIf="signupForm.get('age').touched && signupForm.get('age').hasError('required')">
+      Age is required.
+    </div>
+    <div class="error" *ngIf="signupForm.get('age').touched && signupForm.get('age').hasError('ValidateAge')">
+      Age is should be between 18 and 100.
+    </div>
+  <button type="submit" class="btn btn-default"  [disabled]="signupForm.invalid">Submit</button>
+    <button type="reset" class="btn btn-default" (click)="OnReset($event)" >Reset</button><br />
+    <a (click)="login($event)">Already a member!</a>
+</form>
+</div>

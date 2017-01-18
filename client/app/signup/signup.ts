@@ -1,19 +1,25 @@
-import { Component,OnInit  } from '@angular/core';
+import { Component,OnInit, Inject  } from '@angular/core';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 import {contentHeaders, hostUrl} from '../common/headers';
-import { FormControl, FormGroup, FormBuilder, Validators  } from '@angular/forms';
 import {ISignup} from './signup.interface'
+import {FormBuilder, FormGroup, Validators,FormControl} from '@angular/forms';
 
 @Component({
   selector: 'signup',
   templateUrl : './app/signup/signup.html',
   styleUrls: [ './app/signup/signup.css' ]
 })
-export class Signup  implements OnInit {
+export class Signup  {
   signupForm: FormGroup;
-  constructor(public router: Router, public http: Http) {
-
+  constructor(public router: Router, public http: Http,@Inject(FormBuilder) fb: FormBuilder) {
+      this.signupForm = fb.group({
+          userName:['test',[Validators.required,Validators.minLength(3)]],
+          password: ['',[Validators.required,Validators.minLength(3)]],
+          cnfPassword: ['',[Validators.required,PasswordMatchValidator]],
+          email: ['hrana564@gmail.com',[Validators.required,ValidateEmail]],
+          age: [18,[Validators.required,ValidateAge]]
+      });
   }
 
   login(event) {
@@ -49,18 +55,6 @@ export class Signup  implements OnInit {
           age: {value: '22', disabled: false}
       });
   }
-
-  ngOnInit() {
-      this.signupForm = new FormGroup({
-          userName: new FormControl('', [Validators.required, Validators.minLength(2)]),
-          password: new FormControl('', [Validators.required, Validators.minLength(2)]),
-          cnfPassword: new FormControl('', [Validators.required, PasswordMatchValidator]),
-          email: new FormControl('', [Validators.required, ValidateEmail]),
-          age: new FormControl('' , [Validators.required,ValidateAge] )
-      });
-
-  }
-
 }
 
 function PasswordMatchValidator (c: FormControl) {

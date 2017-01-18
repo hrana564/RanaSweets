@@ -8,15 +8,25 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var http_1 = require('@angular/http');
 var headers_1 = require('../common/headers');
 var forms_1 = require('@angular/forms');
 var Signup = (function () {
-    function Signup(router, http) {
+    function Signup(router, http, fb) {
         this.router = router;
         this.http = http;
+        this.signupForm = fb.group({
+            userName: ['test', [forms_1.Validators.required, forms_1.Validators.minLength(3)]],
+            password: ['', [forms_1.Validators.required, forms_1.Validators.minLength(3)]],
+            cnfPassword: ['', [forms_1.Validators.required, PasswordMatchValidator]],
+            email: ['hrana564@gmail.com', [forms_1.Validators.required, ValidateEmail]],
+            age: [18, [forms_1.Validators.required, ValidateAge]]
+        });
     }
     Signup.prototype.login = function (event) {
         event.preventDefault();
@@ -49,22 +59,14 @@ var Signup = (function () {
             age: { value: '22', disabled: false }
         });
     };
-    Signup.prototype.ngOnInit = function () {
-        this.signupForm = new forms_1.FormGroup({
-            userName: new forms_1.FormControl('', [forms_1.Validators.required, forms_1.Validators.minLength(2)]),
-            password: new forms_1.FormControl('', [forms_1.Validators.required, forms_1.Validators.minLength(2)]),
-            cnfPassword: new forms_1.FormControl('', [forms_1.Validators.required, PasswordMatchValidator]),
-            email: new forms_1.FormControl('', [forms_1.Validators.required, ValidateEmail]),
-            age: new forms_1.FormControl('', [forms_1.Validators.required, ValidateAge])
-        });
-    };
     Signup = __decorate([
         core_1.Component({
             selector: 'signup',
             templateUrl: './app/signup/signup.html',
             styleUrls: ['./app/signup/signup.css']
-        }), 
-        __metadata('design:paramtypes', [router_1.Router, http_1.Http])
+        }),
+        __param(2, core_1.Inject(forms_1.FormBuilder)), 
+        __metadata('design:paramtypes', [router_1.Router, http_1.Http, forms_1.FormBuilder])
     ], Signup);
     return Signup;
 }());

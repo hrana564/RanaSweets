@@ -15,6 +15,9 @@
     <div class="error" *ngIf="signupForm.get('password').touched && signupForm.get('password').hasError('required')">
       Password is required
     </div>
+    <div *ngIf = "signupForm.get('password').hasError('minlength') && !signupForm.get('password').hasError('required')" class = "alert alert-danger">
+      <span>Password should contain atlease 3 characters</span>
+    </div>
   <div class="form-group">
     <label for="cnfpassword">Confirm Password</label>
     <input type="password" class="form-control" id="cnfpassword" placeholder="Confirm Password" formControlName="cnfPassword">
@@ -22,7 +25,7 @@
     <div class="error" *ngIf="signupForm.get('cnfPassword').touched && signupForm.get('cnfPassword').hasError('required')">
       Confirm Password is required
     </div>
-    <div class="error" *ngIf="signupForm.get('cnfPassword').touched && signupForm.get('cnfPassword').hasError('PasswordMatchValidator')">
+    <div class="error" *ngIf="signupForm.get('cnfPassword').touched && signupForm.get('password').touched  && signupForm.hasError('PasswordMatchValidator')">
       Passwords do not match.
     </div>
   <div class="form-group">

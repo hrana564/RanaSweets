@@ -10,7 +10,9 @@ router.post('/', function(request, response) {
     var user = new UserModel(request.body.value);
     user.save(function(err, resource) {
         if (err) {
-            response.send(err).status(501);
+            console.log(err);
+            response.status(500).send("Internal Server Error Occcoured!!!");
+            //response.send(err).status(501);
         } else {
             EmailUitlity.SendRetailEmail(user.email, '', '', 'Test email from rana sweets. ✔', '', "Hi "+user.userName+", <br /> Welcome to <b>Rana Sweets</b>.", function () {
                 response.json(resource).status(201);

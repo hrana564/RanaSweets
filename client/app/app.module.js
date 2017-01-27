@@ -18,6 +18,8 @@ var auth_guard_1 = require('./common/auth.guard');
 var home_1 = require('./home/home');
 var login_1 = require('./login/login');
 var signup_1 = require('./signup/signup');
+var forgotpassword_1 = require('./forgotpassword/forgotpassword');
+var resetpassword_1 = require('./resetpassword/resetpassword');
 var app_routes_1 = require('./app.routes');
 var router_1 = require("@angular/router");
 var AppModule = (function () {
@@ -36,7 +38,9 @@ var AppModule = (function () {
             declarations: [app_1.App,
                 home_1.Home,
                 login_1.Login,
-                signup_1.Signup],
+                signup_1.Signup,
+                forgotpassword_1.ForgotPassword,
+                resetpassword_1.ResetPassword],
             bootstrap: [app_1.App]
         }), 
         __metadata('design:paramtypes', [])

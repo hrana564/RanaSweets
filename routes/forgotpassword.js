@@ -1,6 +1,3 @@
-/**
- * Created by HP PC on 05-01-2017.
- */
 var express = require('express');
 var router = express.Router();
 var UserModel = require('../models/user.js');
@@ -11,9 +8,13 @@ router.post('/', function(request, response) {
     UserModel.findOne({email:request.body.email}, function (err, resource) {
         if (err) {
             console.log(err);
-            response.send(err).status(501);
+            return response.status(400).send({
+                message: 'Internal Server Error Occoured! Please try again later.'
+            });
         }if(! resource){
-            throw "No such email exists.";
+            return response.status(400).send({
+                message: 'No such email exists.'
+            });
         } else {
             var resetString = commonFunctions.RandomAlphaNumericStringGenerator(64, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
             resource.resetKey = resetString;
@@ -29,7 +30,10 @@ router.post('/', function(request, response) {
                     }
                     catch (ex){
                         console.log(ex);
-                        response.send(err).status(501);
+                        //response.send(err).status(501);
+                        return response.status(400).send({
+                            message: 'Internal Server Error Occoured! Please try again later.'
+                        });
                     }
                 }
             });

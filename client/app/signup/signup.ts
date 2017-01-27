@@ -16,10 +16,10 @@ export class Signup  {
       this.signupForm = fb.group({
           userName:['test',[Validators.required,Validators.minLength(3)]],
           password: ['',[Validators.required,Validators.minLength(3)]],
-          cnfPassword: ['',[Validators.required,PasswordMatchValidator]],
+          cnfPassword: ['',[Validators.required]],
           email: ['hrana564@gmail.com',[Validators.required,ValidateEmail]],
           age: [18,[Validators.required,ValidateAge]]
-      });
+      }, {validator: PasswordMatchValidator('password', 'cnfPassword')});
   }
 
   login(event) {
@@ -33,13 +33,15 @@ export class Signup  {
           this.http.post(hostUrl+'/signup', body, { headers: contentHeaders })
               .subscribe(
                   response => {
-                      localStorage.setItem('id_token', response.json().id_token);
-                      this.router.navigate(['home']);
+                      console.log(response);
+                      //localStorage.setItem('id_token', response.json().id_token);
+                      //this.router.navigate(['home']);
                       this.router.navigate(['login','green','Successfully Registed.']);
                   },
                   error => {
-                      alert(error.text());
+                      //alert(error.text());
                       console.log(error.text());
+                      this.router.navigate(['login','red','Error Occoured!!!']);
                   }
               );
       }
@@ -57,13 +59,19 @@ export class Signup  {
   }
 }
 
-function PasswordMatchValidator (c: FormControl) {
-    return c.value=='' || (c.value == c.root.get('password').value) ? null : {
-        PasswordMatchValidator: {
-            valid: false
+function PasswordMatchValidator (passwordKey: string, confirmPasswordKey: string) {
+    return (group: FormGroup): {[key: string]: any} => {
+        let password = group.controls[passwordKey];
+        let confirmPassword = group.controls[confirmPasswordKey];
+
+        if (password.value !== confirmPassword.value) {
+            return {
+                PasswordMatchValidator: true
+            };
         }
     };
 }
+
 
 function ValidateAge(c: FormControl) {
     return c.value=='' || (c.value >= 18 && c.value<=100) ? null : {

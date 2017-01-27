@@ -23,10 +23,10 @@ var Signup = (function () {
         this.signupForm = fb.group({
             userName: ['test', [forms_1.Validators.required, forms_1.Validators.minLength(3)]],
             password: ['', [forms_1.Validators.required, forms_1.Validators.minLength(3)]],
-            cnfPassword: ['', [forms_1.Validators.required, PasswordMatchValidator]],
+            cnfPassword: ['', [forms_1.Validators.required]],
             email: ['hrana564@gmail.com', [forms_1.Validators.required, ValidateEmail]],
             age: [18, [forms_1.Validators.required, ValidateAge]]
-        });
+        }, { validator: PasswordMatchValidator('password', 'cnfPassword') });
     }
     Signup.prototype.login = function (event) {
         event.preventDefault();
@@ -39,12 +39,14 @@ var Signup = (function () {
             var body = JSON.stringify({ value: value });
             this.http.post(headers_1.hostUrl + '/signup', body, { headers: headers_1.contentHeaders })
                 .subscribe(function (response) {
-                localStorage.setItem('id_token', response.json().id_token);
-                _this.router.navigate(['home']);
+                console.log(response);
+                //localStorage.setItem('id_token', response.json().id_token);
+                //this.router.navigate(['home']);
                 _this.router.navigate(['login', 'green', 'Successfully Registed.']);
             }, function (error) {
-                alert(error.text());
+                //alert(error.text());
                 console.log(error.text());
+                _this.router.navigate(['login', 'red', 'Error Occoured!!!']);
             });
         }
     };
@@ -71,10 +73,14 @@ var Signup = (function () {
     return Signup;
 }());
 exports.Signup = Signup;
-function PasswordMatchValidator(c) {
-    return c.value == '' || (c.value == c.root.get('password').value) ? null : {
-        PasswordMatchValidator: {
-            valid: false
+function PasswordMatchValidator(passwordKey, confirmPasswordKey) {
+    return function (group) {
+        var password = group.controls[passwordKey];
+        var confirmPassword = group.controls[confirmPasswordKey];
+        if (password.value !== confirmPassword.value) {
+            return {
+                PasswordMatchValidator: true
+            };
         }
     };
 }

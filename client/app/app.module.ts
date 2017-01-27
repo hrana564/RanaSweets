@@ -11,6 +11,8 @@ import { AuthGuard } from './common/auth.guard';
 import { Home } from './home/home';
 import { Login } from './login/login';
 import { Signup } from './signup/signup';
+import {ForgotPassword} from './forgotpassword/forgotpassword';
+import  {ResetPassword} from './resetpassword/resetpassword';
 import { routes } from './app.routes';
 import {RouterModule} from "@angular/router";
 
@@ -26,7 +28,9 @@ import {RouterModule} from "@angular/router";
     declarations: [App ,
         Home,
         Login,
-        Signup],
+        Signup,
+        ForgotPassword,
+        ResetPassword],
     bootstrap: [App]
 })
 export class AppModule {}

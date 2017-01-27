@@ -12,15 +12,20 @@ var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var http_1 = require('@angular/http');
 var headers_1 = require('../common/headers');
-var Signup = (function () {
-    function Signup(router, http) {
+var forms_1 = require("@angular/forms");
+var ResetPassword = (function () {
+    function ResetPassword(router, http, fb) {
         this.router = router;
         this.http = http;
+        this.fb = fb;
+        this.resetPasswordForm = fb.group({
+            password: ['', [forms_1.Validators.required, forms_1.Validators.minLength(3)]]
+        });
     }
-    Signup.prototype.signup = function (event, userName, password) {
+    ResetPassword.prototype.resetPassword = function (event, password) {
         var _this = this;
         event.preventDefault();
-        var body = JSON.stringify({ userName: userName, password: password });
+        var body = JSON.stringify({ password: password });
         this.http.post(headers_1.hostUrl + '/signup', body, { headers: headers_1.contentHeaders })
             .subscribe(function (response) {
             localStorage.setItem('id_token', response.json().id_token);
@@ -30,19 +35,21 @@ var Signup = (function () {
             console.log(error.text());
         });
     };
-    Signup.prototype.login = function (event) {
+    ResetPassword.prototype.login = function (event) {
         event.preventDefault();
-        this.router.navigate(['login', 'green', 'successfully routed']);
+        this.router.navigate(['login']);
     };
-    Signup = __decorate([
+    ResetPassword.prototype.ngOnInit = function () {
+    };
+    ResetPassword = __decorate([
         core_1.Component({
-            selector: 'signup',
-            templateUrl: './app/forgotpassword/forgotpassword.html',
-            styleUrls: ['./app/forgotpassword/forgotpassword.css']
+            selector: 'resetPassword',
+            templateUrl: './app/resetpassword/resetpassword.html',
+            styleUrls: ['./app/resetpassword/resetpassword.css']
         }), 
-        __metadata('design:paramtypes', [router_1.Router, http_1.Http])
-    ], Signup);
-    return Signup;
+        __metadata('design:paramtypes', [router_1.Router, http_1.Http, forms_1.FormBuilder])
+    ], ResetPassword);
+    return ResetPassword;
 }());
-exports.Signup = Signup;
+exports.ResetPassword = ResetPassword;
 //# sourceMappingURL=resetpassword.js.map

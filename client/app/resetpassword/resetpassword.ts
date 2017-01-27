@@ -1,21 +1,26 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { Http } from '@angular/http';
 import {contentHeaders, hostUrl} from '../common/headers';
+import {FormBuilder,FormGroup,Validators} from "@angular/forms";
 
 
 @Component({
-  selector: 'signup',
-  templateUrl : './app/forgotpassword/forgotpassword.html',
-  styleUrls: [ './app/forgotpassword/forgotpassword.css' ]
+  selector: 'resetPassword',
+  templateUrl : './app/resetpassword/resetpassword.html',
+  styleUrls: [ './app/resetpassword/resetpassword.css' ]
 })
-export class Signup {
-  constructor(public router: Router, public http: Http) {
+export class ResetPassword implements OnInit{
+  public resetPasswordForm : FormGroup;
+  constructor(public router: Router, public http: Http,private fb:FormBuilder) {
+    this.resetPasswordForm = fb.group({
+      password : ['',[Validators.required,Validators.minLength(3)]]
+    });
   }
 
-  signup(event, userName, password) {
+  resetPassword(event, password) {
     event.preventDefault();
-    let body = JSON.stringify({ userName, password });
+    let body = JSON.stringify({ password });
     this.http.post(hostUrl+'/signup', body, { headers: contentHeaders })
       .subscribe(
         response => {
@@ -31,7 +36,11 @@ export class Signup {
 
   login(event) {
     event.preventDefault();
-    this.router.navigate(['login','green','successfully routed']);
+    this.router.navigate(['login']);
+  }
+
+  ngOnInit(): void {
+
   }
 
 }

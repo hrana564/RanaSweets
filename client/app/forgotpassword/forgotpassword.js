@@ -12,12 +12,25 @@ var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var http_1 = require('@angular/http');
 var headers_1 = require('../common/headers');
-var Signup = (function () {
-    function Signup(router, http) {
+var router_2 = require('@angular/router');
+var forms_1 = require('@angular/forms');
+var ForgotPassword = (function () {
+    function ForgotPassword(router, http, route, fb) {
+        var _this = this;
         this.router = router;
         this.http = http;
+        this.route = route;
+        this.fb = fb;
+        this.route.params.subscribe(function (params) {
+            _this.color = params['color']; // this.id = +params['id'] (+) converts string 'id' to a number
+            _this.errorMessage = params['errorMessage'];
+            // In a real app: dispatch action to load the details here.
+        });
+        this.forgotPasswordForm = fb.group({
+            email: ['hrana564@gmail.com', [forms_1.Validators.required, ValidateEmail]],
+        });
     }
-    Signup.prototype.forgotPassword = function (event, email) {
+    ForgotPassword.prototype.forgotPassword = function (event, email) {
         var _this = this;
         event.preventDefault();
         var body = JSON.stringify({ email: email });
@@ -26,23 +39,31 @@ var Signup = (function () {
             localStorage.setItem('id_token', response.json().id_token);
             _this.router.navigate(['home']);
         }, function (error) {
-            alert(error.text());
+            console.log(error.text());
             console.log(error.text());
         });
     };
-    Signup.prototype.login = function (event) {
+    ForgotPassword.prototype.backToLogin = function (event) {
         event.preventDefault();
-        this.router.navigate(['login', 'green', 'successfully routed']);
+        this.router.navigate(['login']);
     };
-    Signup = __decorate([
+    ForgotPassword = __decorate([
         core_1.Component({
-            selector: 'signup',
+            selector: 'forgotPassword',
             templateUrl: './app/forgotpassword/forgotpassword.html',
             styleUrls: ['./app/forgotpassword/forgotpassword.css']
         }), 
-        __metadata('design:paramtypes', [router_1.Router, http_1.Http])
-    ], Signup);
-    return Signup;
+        __metadata('design:paramtypes', [router_1.Router, http_1.Http, router_2.ActivatedRoute, forms_1.FormBuilder])
+    ], ForgotPassword);
+    return ForgotPassword;
 }());
-exports.Signup = Signup;
+exports.ForgotPassword = ForgotPassword;
+function ValidateEmail(c) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return c.value == '' || re.test(c.value) ? null : {
+        ValidateEmail: {
+            valid: false
+        }
+    };
+}
 //# sourceMappingURL=forgotpassword.js.map

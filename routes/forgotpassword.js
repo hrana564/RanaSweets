@@ -3,37 +3,32 @@ var router = express.Router();
 var UserModel = require('../models/user.js');
 var EmailUitlity = require('../utilities/email.js');
 var commonFunctions = require('../utilities/functions.js');
+var config = require('../utilities/config');
 
 router.post('/', function(request, response) {
     UserModel.findOne({email:request.body.email}, function (err, resource) {
         if (err) {
             console.log(err);
-            return response.status(400).send({
-                message: 'Internal Server Error Occoured! Please try again later.'
-            });
+            response.status(500).send("Internal Server Error Occcoured!!!");
         }if(! resource){
-            return response.status(400).send({
-                message: 'No such email exists.'
-            });
+            console.log(err);
+            response.status(500).send("No such email exist!!!");
         } else {
             var resetString = commonFunctions.RandomAlphaNumericStringGenerator(64, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ');
             resource.resetKey = resetString;
             resource.save(function (error) {
                 if(error){
-                    console.log(error);
-                    response.send(error).status(501);
+                    console.log(err);
+                    response.status(500).send("Internal server error while resetting your password!!!");
                 }else{
                     try{
-                        EmailUitlity.SendRetailEmail(request.body.email, '', '', 'Password Reset for Rana Sweets Online', '', "Hi "+resource.userName+", <br /> Your Reset Password Request for <b>Rana Sweets Online </b>have been precessed successfully. User ID = "+resource._id+" Reset string :  "+resetString , function () {
-                        response.json(resource).status(201);
+                        EmailUitlity.SendRetailEmail(request.body.email, '', '', 'Password Reset for '+config.AppName, '', "Hi <strong>"+resource.userName+",</strong> <br /> Your Reset Password Request for <b>"+config.AppName+" </b>have been precessed successfully.<br /> <a href = '"+config.hostName+"#/resetPassword/"+resource._id+"/"+resetString +"' >Please click here to reset your password.</a>" , function () {
+                            response.status(201).send("Successfully reset your password!!!");
                         });
                     }
                     catch (ex){
                         console.log(ex);
-                        //response.send(err).status(501);
-                        return response.status(400).send({
-                            message: 'Internal Server Error Occoured! Please try again later.'
-                        });
+                        response.status(500).send("Error while sending email to your account!!!");
                     }
                 }
             });

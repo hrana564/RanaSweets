@@ -13,6 +13,7 @@ var UserSchema = new Schema({
             validate : function (v) {
                 return v.length >3;
             },
+            required: [true,'Password is Mandatory.'],
             message: 'Invalid Password "{VALUE}" !! IT should be greater than 3!'
         }
     },

@@ -12,7 +12,7 @@ export const routes: Routes = [
   { path: 'login/:color/:errorMessage',  component: Login },
   { path: 'signup', component: Signup },
   { path: 'forgotPassword', component: ForgotPassword },
-  { path: 'resetPassword', component: ResetPassword },
+  { path: 'resetPassword/:userID/:resetID', component: ResetPassword },
   { path: 'home',   component: Home, canActivate: [AuthGuard] },
   { path: '**',     component: Login },
 ];

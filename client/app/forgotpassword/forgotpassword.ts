@@ -14,6 +14,7 @@ import {FormBuilder, FormGroup, Validators,FormControl} from '@angular/forms';
 export class ForgotPassword {
   color: string;
   errorMessage : string;
+  successMessage : string;
   forgotPasswordForm : FormGroup;
   constructor(public router: Router, public http: Http,private route: ActivatedRoute,private fb:FormBuilder) {
     this.route.params.subscribe(params => {
@@ -22,7 +23,7 @@ export class ForgotPassword {
       // In a real app: dispatch action to load the details here.
     });
     this.forgotPasswordForm =  fb.group({
-      email: ['hrana564@gmail.com',[Validators.required,ValidateEmail]],
+      email: ['hrana564@gmail.com',[Validators.required,this.ValidateEmail]],
     });
   }
 
@@ -32,12 +33,17 @@ export class ForgotPassword {
     this.http.post(hostUrl+'/forgotPassword', body, { headers: contentHeaders })
       .subscribe(
         response => {
-          localStorage.setItem('id_token', response.json().id_token);
-          this.router.navigate(['home']);
+          this.successMessage = response.text();
+          // localStorage.setItem('id_token', response.json().id_token);
+          // this.router.navigate(['home']);
         },
         error => {
           console.log(error.text());
-          console.log(error.text());
+          if(error.text() == "No such email exist!!!"){
+            this.errorMessage =error.text();
+          }else{
+            this.router.navigate(['login','red','Error occoured while resetting your password!!!']);
+          }
         }
       );
   }
@@ -46,13 +52,13 @@ export class ForgotPassword {
     event.preventDefault();
     this.router.navigate(['login']);
   }
-}
 
-function ValidateEmail(c: FormControl) {
-  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return c.value=='' || re.test(c.value) ? null : {
-    ValidateEmail: {
-      valid: false
-    }
-  };
+  ValidateEmail(c: FormControl) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return c.value=='' || re.test(c.value) ? null : {
+      ValidateEmail: {
+        valid: false
+      }
+    };
+  }
 }

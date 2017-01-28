@@ -48,7 +48,7 @@
     <div class="error" *ngIf="signupForm.get('age').touched && signupForm.get('age').hasError('ValidateAge')">
       Age is should be between 18 and 100.
     </div>
-  <button type="submit" class="btn btn-default"  [disabled]="signupForm.invalid">Submit</button>
+  <button type="submit" class="btn btn-default" [disabled]="signupForm.invalid">Submit</button>
     <button type="reset" class="btn btn-default" (click)="OnReset($event)" >Reset</button><br />
     <a (click)="login($event)">Already a member!</a>
 </form>

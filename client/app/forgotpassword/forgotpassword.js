@@ -27,7 +27,7 @@ var ForgotPassword = (function () {
             // In a real app: dispatch action to load the details here.
         });
         this.forgotPasswordForm = fb.group({
-            email: ['hrana564@gmail.com', [forms_1.Validators.required, ValidateEmail]],
+            email: ['hrana564@gmail.com', [forms_1.Validators.required, this.ValidateEmail]],
         });
     }
     ForgotPassword.prototype.forgotPassword = function (event, email) {
@@ -36,16 +36,30 @@ var ForgotPassword = (function () {
         var body = JSON.stringify({ email: email });
         this.http.post(headers_1.hostUrl + '/forgotPassword', body, { headers: headers_1.contentHeaders })
             .subscribe(function (response) {
-            localStorage.setItem('id_token', response.json().id_token);
-            _this.router.navigate(['home']);
+            _this.successMessage = response.text();
+            // localStorage.setItem('id_token', response.json().id_token);
+            // this.router.navigate(['home']);
         }, function (error) {
             console.log(error.text());
-            console.log(error.text());
+            if (error.text() == "No such email exist!!!") {
+                _this.errorMessage = error.text();
+            }
+            else {
+                _this.router.navigate(['login', 'red', 'Error occoured while resetting your password!!!']);
+            }
         });
     };
     ForgotPassword.prototype.backToLogin = function (event) {
         event.preventDefault();
         this.router.navigate(['login']);
+    };
+    ForgotPassword.prototype.ValidateEmail = function (c) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return c.value == '' || re.test(c.value) ? null : {
+            ValidateEmail: {
+                valid: false
+            }
+        };
     };
     ForgotPassword = __decorate([
         core_1.Component({
@@ -58,12 +72,4 @@ var ForgotPassword = (function () {
     return ForgotPassword;
 }());
 exports.ForgotPassword = ForgotPassword;
-function ValidateEmail(c) {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return c.value == '' || re.test(c.value) ? null : {
-        ValidateEmail: {
-            valid: false
-        }
-    };
-}
 //# sourceMappingURL=forgotpassword.js.map

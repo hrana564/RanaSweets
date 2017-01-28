@@ -11,7 +11,7 @@ exports.routes = [
     { path: 'login/:color/:errorMessage', component: login_1.Login },
     { path: 'signup', component: signup_1.Signup },
     { path: 'forgotPassword', component: forgotpassword_1.ForgotPassword },
-    { path: 'resetPassword', component: resetpassword_1.ResetPassword },
+    { path: 'resetPassword/:userID/:resetID', component: resetpassword_1.ResetPassword },
     { path: 'home', component: home_1.Home, canActivate: [auth_guard_1.AuthGuard] },
     { path: '**', component: login_1.Login },
 ];
